@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["extendedWhereUnique"]
+}
+
+generator pothos {
+  provider = "prisma-pothos-types"
+}
+
+datasource postgresql {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  comments  Comment[]
+}
+
+model Post {
+  id       Int       @id @default(autoincrement())
+  title    String
+  content  String
+  comments Comment[]
+  authorId Int
+}
+
+model Comment {
+  id       Int    @id @default(autoincrement())
+  comment  String
+  author   User   @relation(fields: [authorId], references: [id])
+  post     Post   @relation(fields: [postId], references: [id])
+  authorId Int
+  postId   Int
+}
